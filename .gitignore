@@ -1,5 +1,7 @@
 __pycache__/
-*.pyc
+scraping/*/__pycache__/
+scraping/*/*.pyc
+
 scraping/build/
 scraping/dist/
 scraping/wheels/
