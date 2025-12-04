@@ -1,1 +1,10 @@
+__pycache__/
+*.pyc
+scraping/build/
+scraping/dist/
+scraping/wheels/
+scraping/*.egg-info
+scraping/.gitignore
 
+# Virtual environments
+scraping/.venv

@@ -1,1 +1,1 @@
-from .open_weather import Scraping, OpenWeatherMap
+from .open_weather import Api, OpenWeatherMap

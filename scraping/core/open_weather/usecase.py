@@ -10,11 +10,11 @@ from .entity import Api
 import requests
 
 
-class OpenWeatherMap(ScrapingTrait):
-    entity: Scraping
+class OpenWeatherMap(ApiTrait):
+    entity: Api
     response_code: int
 
-    def __init__(self, entity: Scraping) -> None:
+    def __init__(self, entity: Api) -> None:
         self.entity = entity
         self.response_code = [200, 201, 2003]
 
@@ -34,9 +34,10 @@ class OpenWeatherMap(ScrapingTrait):
             time = datetime.now()
             current = result["current"]
             hourly = result["hourly"]
-            return Api(
+
+            return ResultApiOpenMeteo(
                 time_r=time,
-                temperature=current["temperature"],
+                temperature=current["temperature_2m"],
                 humidity=hourly["relative_humidity_2m"],
                 wind_speed=current["wind_speed_10m"]
             )
