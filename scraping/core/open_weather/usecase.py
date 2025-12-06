@@ -3,7 +3,8 @@ from typing import Union
 from datetime import datetime
 
 from dto import ResultApiOpenMeteo
-from interface import ApiTrait, AppError
+from interface import ApiTrait
+from app_error import AppError
 
 from .entity import Api
 

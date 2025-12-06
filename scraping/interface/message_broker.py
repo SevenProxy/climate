@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Union
+from pika.pika import Channel
 from app_error import AppError
-from dto import ResultApiOpenMeteo
 
-class ApiTrait(ABC):
+class MessageBrokerTrait(ABC):
 
     @abstractmethod
-    def get_response_api(self) -> Union[ResultApiOpenMeteo, AppError]:
+    def connect(self, url: str) -> Union[Channel, AppError]:
         pass
 
