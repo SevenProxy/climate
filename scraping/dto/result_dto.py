@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 @dataclass
 class ResultApiOpenMeteo:
     time_r: datetime
-    temperature: int
-    humidity: float
-    wind_speed: int
+    temperature: float
+    humidity: List
+    wind_speed: float
 
 

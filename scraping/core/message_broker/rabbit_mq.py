@@ -1,7 +1,7 @@
 from typing import Union
 from interface import MessageBrokerTrait
 from app_error import AppError
-from dto import PropsRabbit
+from dto import PropsRabbit, ResultApiOpenMeteo
 from pika.channel import Channel
 
 import pika
@@ -26,13 +26,18 @@ class RabbitMq(MessageBrokerTrait):
         except:
             return AppError.CONNECTION_FALIED
 
-    def send(self, payload) -> Union[None, AppError]:
+    def send(self, payload: ResultApiOpenMeteo) -> Union[None, AppError]:
         try:
             channel = self.conn_established.channel
             channel.basic_publish(
                 exchange="",
                 routing_key="climate_channel",
-                body=json.dumps(payload)
+                body=json.dumps({
+                    "time": payload.time_r,
+                    "temperature": payload.temperature,
+                    "humidity": payload.humidity,
+                    "wind_speed": payload.wind_speed,
+                })
             )
             return
         except:

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Union
-from pika.pika import Channel
+from pika.channel import Channel
 from app_error import AppError
 
 class MessageBrokerTrait(ABC):
