@@ -1,34 +1,43 @@
 from core import Api, OpenWeatherMap, RabbitMq
 from app_error import AppError
-from dto import PropsRabbit, ResultApiOpenMeteo
+from dto import ResultApiOpenMeteo
 from dotenv import load_dotenv
-from pika.channel import Channel
 
 import os
+import aiohttp
+import asyncio
 
 load_dotenv()
 
-def main() -> None:
+SLEEP_TIME = 60 * 60 * 1
+
+async def main() -> None:
     open_weather: Api = Api(url=os.getenv("URL_API"))
     rabbit_connect = RabbitMq()
 
     usecase: OpenWeatherMap = OpenWeatherMap(entity=open_weather)
-    result = usecase.get_response_api()
 
-    match result:
-        case ResultApiOpenMeteo():
-            conn = rabbit_connect.connect(os.getenv("RABBIT_LOGIN"))
-            match conn:
-                case Channel():
-                    send_rabbit = conn.send(result)
-                    match send_rabbit:
-                        case None:
-                            print("NICE!!!")
+    async with aiohttp.ClientSession() as session:
+        while True:
+            result = await usecase.get_response_api(session)
+
+            match result:
+                case ResultApiOpenMeteo():
+                    conn = rabbit_connect.connect(os.getenv("RABBIT_LOGIN"))
+                    match conn:
+                        case AppError.CONNECTION_FALIED:
+                            print(conn)
                         case _:
-                            print(send_rabbit)
+                            send_rabbit = conn.send(result)
+                            match send_rabbit:
+                                case None:
+                                    print("NICE!!!")
+                                case _:
+                                    print(send_rabbit)
                 case _:
-                    print(conn)
-        case _:
-            print(result)
+                    print(result)
 
-main()
+
+            await asyncio.sleep(SLEEP_TIME)
+
+asyncio.run(main())

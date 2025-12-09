@@ -1,8 +1,7 @@
-from typing import Union
+from typing import Union, Self
 from interface import MessageBrokerTrait
 from app_error import AppError
 from dto import PropsRabbit, ResultApiOpenMeteo
-from pika.channel import Channel
 
 import pika
 import json
@@ -10,7 +9,7 @@ import json
 class RabbitMq(MessageBrokerTrait):
     conn_established: PropsRabbit
 
-    def connect(self, url: str) -> Union[Channel, AppError]:
+    def connect(self, url: str) -> Union[Self, AppError]:
         try:
             params = pika.URLParameters(url)
             conn = pika.BlockingConnection(params)
@@ -22,7 +21,7 @@ class RabbitMq(MessageBrokerTrait):
                 connection_r=conn,
                 channel=channel
             )
-            return channel
+            return self
         except:
             return AppError.CONNECTION_FALIED
 
@@ -33,7 +32,7 @@ class RabbitMq(MessageBrokerTrait):
                 exchange="",
                 routing_key="climate_channel",
                 body=json.dumps({
-                    "time": payload.time_r,
+                    "time": payload.time_r.strftime("%d/%m/%Y"),
                     "temperature": payload.temperature,
                     "humidity": payload.humidity,
                     "wind_speed": payload.wind_speed,
