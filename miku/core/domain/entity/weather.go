@@ -1,4 +1,4 @@
-package weather
+package entity
 
 type Weather struct {
 	Time		int `json:"time_r"`
