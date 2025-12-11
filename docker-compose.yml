@@ -1,6 +1,18 @@
 version: "3.9"
 
 services:
+  database:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: climate
+      POSTGRES_USER: miku
+      POSTGRES_PASSWORD: flamengo
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq_management
@@ -24,4 +36,6 @@ services:
     restart: always
 
 volumes:
+  pgdata:
+    driver: local
   rabbitmq_data:
