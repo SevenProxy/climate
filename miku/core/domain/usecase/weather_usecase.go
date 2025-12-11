@@ -14,5 +14,5 @@ type WeatherUseCase struct {
 
 func (w *WeatherUseCase) CraeteWeather(e *entity.Weather) (bool, utils.AppError) {
 	ctx := context.Background()
-	return  w.r.Create(&e, &ctx)
+	return  w.r.Create(e, &ctx)
 }

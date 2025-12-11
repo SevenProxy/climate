@@ -7,6 +7,8 @@ const (
 	CreateEntityError
 	ErrorNotFound
 	ErrTimeout
+
+	ErrorConnectionRabbit
 )
 
 type AppError struct {
