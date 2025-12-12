@@ -9,6 +9,8 @@ const (
 	ErrTimeout
 
 	ErrorConnectionRabbit
+	ErrorGetChannel
+	ErrorReadMessageChannel
 )
 
 type AppError struct {
