@@ -4,15 +4,14 @@ import (
 	"miku/utils"
 
 	"github.com/streadway/amqp"
-	"gorm.io/gorm/callbacks"
 )
 
 type Rabbit struct {
-	url string
+	Url string
 }
 
 func (r *Rabbit) Connection() (*amqp.Connection, *utils.AppError) {
-	conn, err := amqp.Dial(r.url)
+	conn, err := amqp.Dial(r.Url)
 
 	if err != nil {
 		return nil, &utils.AppError{
@@ -21,7 +20,10 @@ func (r *Rabbit) Connection() (*amqp.Connection, *utils.AppError) {
 		}
 	}
 
-	return conn, nil
+	return conn, &utils.AppError{
+		Code: utils.NoError,
+		Message: "",
+	}
 }
 
 func (r *Rabbit) ChannelGet(c *amqp.Connection) (*amqp.Channel, *utils.AppError) {
@@ -34,7 +36,10 @@ func (r *Rabbit) ChannelGet(c *amqp.Connection) (*amqp.Channel, *utils.AppError)
 		}
 	}
 
-	return ch, nil
+	return ch, &utils.AppError{
+		Code: utils.NoError,
+		Message: "",
+	}
 }
 
 
@@ -72,5 +77,8 @@ func (r *Rabbit) ConsumeChannel(ch *amqp.Channel, channelName string) (<-chan am
 		}
 	}
 	
-	return msg, nil
+	return msg, &utils.AppError{
+		Code: utils.NoError,
+		Message: "",
+	}
 }

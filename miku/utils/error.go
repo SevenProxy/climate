@@ -11,6 +11,8 @@ const (
 	ErrorConnectionRabbit
 	ErrorGetChannel
 	ErrorReadMessageChannel
+
+	NoError
 )
 
 type AppError struct {
