@@ -1,17 +1,24 @@
 package rabbit
 
 import (
+	"fmt"
 	"miku/utils"
 
 	"github.com/streadway/amqp"
 )
 
 type Rabbit struct {
-	Url string
+	url string
+}
+
+func NewRabbit(url string) *Rabbit {
+	return &Rabbit{
+		url: url,
+	}
 }
 
 func (r *Rabbit) Connection() (*amqp.Connection, *utils.AppError) {
-	conn, err := amqp.Dial(r.Url)
+	conn, err := amqp.Dial(r.url)
 
 	if err != nil {
 		return nil, &utils.AppError{
