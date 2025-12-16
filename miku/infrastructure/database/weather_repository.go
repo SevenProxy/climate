@@ -9,18 +9,21 @@ import (
 )
 
 type WeatherRepository struct {
-	db *gorm.DB
+	DB *gorm.DB
 }
 
-func (w *WeatherRepository) Create(ent *entity.Weather, ctx *context.Context) (bool, utils.AppError) {
-	err := gorm.G[entity.Weather](w.db).Create(*ctx, ent)
+func (w *WeatherRepository) Create(ent *entity.Weather, ctx *context.Context) (bool, *utils.AppError) {
+	err := gorm.G[entity.Weather](w.DB).Create(*ctx, ent)
 
 	if err != nil {
-		return false, utils.AppError{
+		return false, &utils.AppError{
 			Code: utils.CreateEntityError,
 			Message: "Error ao criar entidade.",
 		}
 	}
 
-	return true, utils.AppError{}
+	return true, &utils.AppError{
+		Code: utils.NoError,
+		Message: "",
+	}
 }

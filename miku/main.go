@@ -10,6 +10,8 @@ import (
 	"github.com/joho/godotenv"
 
 	"miku/infrastructure/rabbit"
+	"miku/infrastructure/database"
+	"miku/core/domain/usecase"
 	"miku/utils"
 )
 
@@ -24,6 +26,18 @@ func main() {
 			"message": "linux user",
 		})
 	})
+	
+	db := database.Init("host=localhost user=miku password=flamengo dbname=climate port=5432 sslmode=disable TimeZone=America/Sao_Paulo")
+	connection, err := db.Connection()
+
+	if err.Code == utils.ErrorDatabase {
+		fmt.Println(err.Message)
+		return
+	}
+	
+	repo := database.WeatherRepository{
+		DB: connection,
+	}
 
 	r := rabbit.NewRabbit(os.Getenv("RABBIT_URL"))
 	conn, err := r.Connection()
@@ -45,7 +59,20 @@ func main() {
 				fmt.Println(err.Error())
 				return
 			}
-			fmt.Println(message)
+
+			entities, err := r.ReadMessage(message)
+			
+			if err.Code == utils.ErrorReadMessage {
+				return
+			}
+
+			weather := usecase.WeatherUseCase{
+				R: &repo,
+			}
+
+			for ind := range entities {
+				weather.CraeteWeather(&entities[ind])
+			}
 	}
 
 	router.Run()

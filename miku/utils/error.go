@@ -10,6 +10,7 @@ const (
 
 	ErrorConnectionRabbit
 	ErrorGetChannel
+	ErrorReadMessage
 	ErrorReadMessageChannel
 
 	NoError

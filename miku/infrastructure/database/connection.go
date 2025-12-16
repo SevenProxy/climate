@@ -6,26 +6,29 @@ import (
 	"miku/utils"
 )
 
-type Database struct {
+type DB struct {
 	dsn string
 }
 
-func Init(url string) *Database {
-	return &Database{
+func Init(url string) *DB {
+	return &DB{
 		dsn: url,
 	}
 }
 
-func (d *Database) Connection() (*gorm.DB, utils.AppError) {
+func (d *DB) Connection() (*gorm.DB, *utils.AppError) {
 	//dsn := "host=localhost user=miku password=flamengo port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(d.dsn), &gorm.Config{})
 
 	if err != nil {
-		return nil, utils.AppError {
+		return nil, &utils.AppError {
 			Code: utils.ErrorDatabase,
 			Message: "Conexão com banco de dados não foi efetuada",
 		}
 	}
 	
-	return db, utils.AppError{}
+	return db, &utils.AppError{
+		Code: utils.NoError,
+		Message: "",
+	}
 }

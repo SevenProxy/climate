@@ -1,8 +1,10 @@
 package rabbit
 
 import (
-	"fmt"
+	"miku/core/domain/entity"
 	"miku/utils"
+
+	"encoding/json"
 
 	"github.com/streadway/amqp"
 )
@@ -85,6 +87,25 @@ func (r *Rabbit) ConsumeChannel(ch *amqp.Channel, channelName string) (<-chan am
 	}
 	
 	return msg, &utils.AppError{
+		Code: utils.NoError,
+		Message: "",
+	}
+}
+
+func (r *Rabbit) ReadMessage(message <-chan amqp.Delivery) ([]entity.Weather, *utils.AppError) {
+	var vecWeather []entity.Weather
+
+	for msg := range message {
+		var doc entity.Weather
+		
+		if err := json.Unmarshal(msg.Body, &doc); err != nil {
+			continue
+		}
+		
+		vecWeather = append(vecWeather, doc)
+	}
+
+	return vecWeather, &utils.AppError{
 		Code: utils.NoError,
 		Message: "",
 	}
